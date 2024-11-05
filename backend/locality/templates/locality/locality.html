@@ -1,0 +1,85 @@
+{% extends 'home/home.html' %}
+
+{% block content %}
+
+<div class="container">
+	<h3 class="text-center">Localités</h3>
+	{% if save_data == 'ok' %}
+	<div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+		<strong><i class="fa-solid fa-circle-check"></i> Enregistrement réussi!</strong>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+	{% elif update_data == 'ok' %}
+	<div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+		<strong><i class="fa-solid fa-circle-check"></i> Modification réussi!</strong>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+	{% endif %}
+	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_ajout">
+		<i class="fa-solid fa-plus" title="Ajouter un nouveau type"></i>
+	</button>
+	<!-- Modal -->
+	<div class="modal fade" id="modal_ajout" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<h1 class="modal-title fs-5" id="exampleModalLabel">Ajout d'une localité</h1>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form action="" method="post">
+			<div class="modal-body col-6">
+				{% csrf_token %}
+				{{ form.as_p }}
+			</div>
+			<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+			<input type="submit" value="Valider" class="btn btn-success">
+			</div>
+			</form>
+		</div>
+		</div>
+	</div>
+	<table class="table" id="myTable">
+		<thead class="table-light">
+			<tr>
+				<th scope="col">Nom</th>
+				<th scope="col">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for locality in localities %}
+			<tr>
+				<td>{{ locality.name }}</td>
+				<td>
+					<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal_update{{ locality.id }}"><i class="fa-solid fa-pen"></i></button>
+				</td>
+				<!-- Modal -->
+				<div class="modal fade" id="modal_update{{ locality.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+					<h1 class="modal-title fs-5" id="exampleModalLabel">Modification</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<form action="{% url 'locality-update' locality.id %}" method="post">
+						{% csrf_token %}
+                        <div class="mb-3">
+							<label for="locality"><main>Localité</main></label>
+							<input type="text" id="locality" name="name" class="form-control" value="{{ locality.name }}">
+						</div>
+						<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+						<input type="submit" value="Valider" class="btn btn-success">
+						<input type="hidden" name="id" value="{{ locality.id }}">
+						</div>
+					</form>
+				</div>
+				</div>
+			</div>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}
