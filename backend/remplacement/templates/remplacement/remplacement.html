@@ -1,0 +1,118 @@
+{% extends 'home/home.html' %}
+{% block content %}
+<div class="container">
+  <div class="container shadow bg-body  w-53 text-black p-3">
+    <h3 class="text-center">REMPLACEMENT DES UNITES CENTRALES</h3>
+</div>
+<br>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_ajout">
+    <i class="fa-solid fa-plus" title="Ajouter un nouveau remplacement"></i>
+</button>
+<!-- Modal -->
+<div class="modal fade" id="modal_ajout" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Formulaire de saisie de remplacement</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form class="row g-3" action="{% url 'remplacement' %}" method="post" autocomplete="off">
+            <div class="modal-body">
+            <div class="col-md-12">
+                <label for="ancien">Unités centrale</label>
+                <input type="text"  class="form-control form-control-ms mb-3" name="ancien">
+                <label for="etat">Etat</label>
+                <input type="text" class="form-control form-control-ms mb-3" name="etat">
+                <label for="cause">Causes probables</label>
+                <input type="text"  class="form-control form-control-ms mb-3" name="cause">
+                <label for="nouveau">Remplacée par</label>
+                <input type="text"  class="form-control form-control-ms mb-3" name="nouveau">
+                <label for="ticket">N° de ticket Service Now</label>
+                <input type="text"  class="form-control form-control-ms mb-3" name="ticket">
+            </div>
+            <div  class="row g-3">
+                {% csrf_token %}
+            </div>
+            </div>
+            <div class="col-12 modal-footer">
+              <button type="submit" class="btn btn-primary">Valider</button>
+            </div>
+          </form>
+    </div>
+    </div>
+</div><br><br>
+<div class="container">
+  {% if save_data == 'ok' %}
+  <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+  <strong><i class="fa-solid fa-circle-check"></i> Enregistrement réussi!</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
+  {% if update_data == 'ok' %}
+  <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+  <strong><i class="fa-solid fa-circle-check"></i> Modification réussi!</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endif %}
+  <table class="table" id="myTable">
+    <thead class="table-light">
+      <tr>
+          <th scope="col">Unités centrale</th>
+          <th scope="col">Etat</th>
+          <th scope="col">Causes probables</th>
+          <th scope="col">Remplacée par</th>
+          <th scope="col">N° de ticket Service Now</th>
+          <th scope="col">Date opération</th>
+          <th scope="col">Action</th>
+      </tr>
+  </thead>
+  <tbody class="table-group-divider">
+      {% for remplacement in remplacements %}
+      <tr>
+          <td>{{ remplacement.ancien }}</td>
+          <td>{{ remplacement.etat }}</td>
+          <td>{{ remplacement.cause }}</td>
+          <td>{{ remplacement.nouveau }}</td>
+          <td>{{ remplacement.ticket }}</td>
+          <td>{{ remplacement.date_created|date:'d-m-Y' }}</td>
+          <td>
+            <button type="button" class="btn btn-primary position-center  translate-light" data-bs-toggle="modal" 
+            data-bs-target="#modal_update{{ remplacement.id }}"><i class="fa-solid fa-pen"></i></button>
+            <!-- Modal -->
+            <div class="modal fade" id="modal_update{{ remplacement.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modification</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{% url 'remplacement-update' remplacement.id %}"  method="post" autocomplete="off">
+                        <div class="modal-body">
+                        {% csrf_token %}
+                        <label for="ticket">Unités centrale</label>
+                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ remplacement.ancien}}" name="ancien">
+                        <label for="designation">Etat</label>
+                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ remplacement.etat}}" name="etat">
+                        <label for="serialNumber">Causes probables</label>
+                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ remplacement.cause}}" name="cause">
+                        <label for="anomaly">Remplacée par</label>
+                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ remplacement.nouveau}}" name="nouveau">
+                        <label for="status">N° de ticket Service Now</label>
+                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ remplacement.ticket}}" name="ticket">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            <input type="submit" value="Valider" class="btn btn-success">
+                            <input type="hidden" name="id" value="{{ remplacement.id }}">
+                        </div>
+                    </form>
+              </td>
+        </div>         
+        </div>       
+      </div>
+{% endfor %}
+</tbody>
+</table>
+</div
+{% endblock %}

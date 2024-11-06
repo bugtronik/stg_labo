@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'maintenance',
     'bootstrap5',
     'fontawesomefree',
+    'remplacement',
 ]
 
 MIDDLEWARE = [

@@ -24,6 +24,7 @@ from source import views as views_source
 import authentication.views
 from django.contrib.auth.views import LoginView, LogoutView
 from maintenance import views as views_maintenance
+from remplacement import views as views_remplacement
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,6 +35,8 @@ urlpatterns = [
     path('source/<int:id>/', views_source.source_update, name='source-update'),
     path('maintenance/', views_maintenance.maintenance, name='maintenance'),
     path('maintenance/<int:id>/', views_maintenance.maintenance_update, name='maintenance-update'),
+    path('remplacement/', views_remplacement.remplacement, name='remplacement'),
+    path('remplacement/<int:id>/', views_remplacement.remplacement_update, name='remplacement-update'),
     #section gérant l'authentification et la création des comptes utilisateurs
     path('', LoginView.as_view(
         template_name='authentication/login.html',
