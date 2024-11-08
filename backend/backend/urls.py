@@ -21,6 +21,7 @@ from django.urls import path
 from home import views as views_home
 from locality import views as views_locality
 from source import views as views_source
+from status import views as views_status
 import authentication.views
 from django.contrib.auth.views import LoginView, LogoutView
 from maintenance import views as views_maintenance
@@ -33,6 +34,8 @@ urlpatterns = [
     path('locality/<int:id>/', views_locality.locality_update, name='locality-update'),
     path('source/', views_source.source, name='source'),
     path('source/<int:id>/', views_source.source_update, name='source-update'),
+    path('status/', views_status.status, name='status'),
+    path('status/<int:id>/', views_status.status_update, name='status-update'),
     path('maintenance/', views_maintenance.maintenance, name='maintenance'),
     path('maintenance/<int:id>/', views_maintenance.maintenance_update, name='maintenance-update'),
     path('remplacement/', views_remplacement.remplacement, name='remplacement'),
