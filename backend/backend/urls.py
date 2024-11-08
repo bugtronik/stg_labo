@@ -33,7 +33,6 @@ urlpatterns = [
     path('locality/<int:id>/', views_locality.locality_update, name='locality-update'),
     path('source/', views_source.source, name='source'),
     path('source/<int:id>/', views_source.source_update, name='source-update'),
-    path('', views_maintenance.maintenance, name='maintenance'),
     path('maintenance/', views_maintenance.maintenance, name='maintenance'),
     path('maintenance/<int:id>/', views_maintenance.maintenance_update, name='maintenance-update'),
     path('remplacement/', views_remplacement.remplacement, name='remplacement'),
