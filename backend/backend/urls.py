@@ -25,6 +25,7 @@ from status import views as views_status
 import authentication.views
 from django.contrib.auth.views import LoginView, LogoutView
 from maintenance import views as views_maintenance
+from hotline import views as views_hotline
 from remplacement import views as views_remplacement
 
 urlpatterns = [
@@ -38,6 +39,8 @@ urlpatterns = [
     path('status/<int:id>/', views_status.status_update, name='status-update'),
     path('maintenance/', views_maintenance.maintenance, name='maintenance'),
     path('maintenance/<int:id>/', views_maintenance.maintenance_update, name='maintenance-update'),
+    path('hotline/', views_hotline.hotline, name='hotline'),
+    path('hotline/<int:id>/', views_hotline.hotline_update, name='hotline-update'),
     path('remplacement/', views_remplacement.remplacement, name='remplacement'),
     path('remplacement/<int:id>/', views_remplacement.remplacement_update, name='remplacement-update'),
     #section gérant l'authentification et la création des comptes utilisateurs

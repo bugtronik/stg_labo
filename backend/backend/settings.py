@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'fontawesomefree',
     'remplacement',
     'status',
+    'hotline',
 ]
 
 MIDDLEWARE = [
