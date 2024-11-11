@@ -15,12 +15,13 @@ def maintenance(request):
     
     if request.method == 'POST':
         form = forms.MaintenanceForm(request.POST)
+        print(form)
         if form.is_valid():
             maintenance_form = form.save(commit=False)
             maintenance_form.user = request.user
             # on récupère la source, la localité avec leur id
-            status = models.Status.objects.get(id=request.POST.get('source'))
-            hotline = models.Hotline.objects.get(id=request.POST.get('locality'))
+            status = models.Status.objects.get(id=request.POST.get('status'))
+            hotline = models.Hotline.objects.get(id=request.POST.get('hotline'))
 
             maintenance_form.status = status
             maintenance_form.hotline = hotline
@@ -53,8 +54,8 @@ def maintenance_update(request, id):
             maintenance_form = form.save(commit=False)
             maintenance_form.user = request.user
             
-            status = models.Status.objects.get(id=request.POST.get('source'))
-            hotline = models.Hotline.objects.get(id=request.POST.get('locality'))
+            status = models.Status.objects.get(id=request.POST.get('status'))
+            hotline = models.Hotline.objects.get(id=request.POST.get('hotline'))
             maintenance_form.status = status
             maintenance_form.hotline = hotline
             form_update.save()
