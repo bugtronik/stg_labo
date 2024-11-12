@@ -97,52 +97,58 @@
           <td>{{ hotline.user.first_name }} {{ hotline.user.last_name }}</td>
           <td>{{ hotline.updated_by }}</td>
           <td>
-            <button type="button" class="btn btn-primary position-center  translate-light" data-bs-toggle="modal" 
+			{% if hotline.isMaintenance == 'oui' or hotline.isMaintenance == 'end' %}
+				<button class="btn btn-primary position-center" disabled>
+					<i class="fa-solid fa-lock"></i>
+				</button>
+			{% elif hotline.isMaintenance == 'non' %}
+			<button type="button" class="btn btn-primary position-center  translate-light" data-bs-toggle="modal" 
             data-bs-target="#modal_update{{ hotline.id }}"><i class="fa-solid fa-pen"></i></button>
+			{% endif %}
             <!-- Modal -->
             <div class="modal fade" id="modal_update{{ hotline.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modification</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form action="{% url 'hotline-update' hotline.id %}"  method="post" autocomplete="off">
-                        <div class="modal-body ">
-                        {% csrf_token %}
-                        <label for="date_entree">Date d'entrée</label>
-                        <input type="date"  class="form-control form-control-ms mb-3"  value="{{ hotline.date_entree }}" name="date_entree">
-                        <label for="ticket">Ticket</label>
-                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ hotline.ticket}}" name="ticket">
-                        <label for="designation">Désignation</label>
-                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ hotline.designation}}" name="designation">
-                        <label for="serialNumber">N° de série</label>
-                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ hotline.serialNumber}}" name="serialNumber">
-                        <label for="anomaly">Anomalie constatée</label>
-                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ hotline.anomaly}}" name="anomaly">
-                        <label for="source">Provenance</label>
-                        <select id="source" class="form-select" name="source">
-                        <option value="{{ hotline.source.id }}">{{ hotline.source.name }}</option>
-                          {% for source in sources %}
-                            <option value="{{ source.id }}">{{ source.name }}</option>
-                          {% endfor %}
-                        </select>
-                        <label for="locality">Localité</label>
-                        <select id="locality" class="form-select" name="locality">
-                        <option value="{{ hotline.locality.id }}">{{ hotline.locality.name }}</option>
-                          {% for locality in localities %}
-                            <option value="{{ locality.id }}">{{ locality.name }}</option>
-                          {% endfor %}
-                        </select>
-                        <input type="hidden" name="updated_by" value="{{ user.first_name }} {{ user.last_name }}">
-                        <input type="hidden" name="isMaintenance" value="non">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                            <input type="submit" value="Valider" class="btn btn-success">
-                            <input type="hidden" name="id" value="{{ hotline.id }}">
-                        </div>
-                    </form>
+							<h1 class="modal-title fs-5" id="exampleModalLabel">Modification</h1>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    	</div>
+						<form action="{% url 'hotline-update' hotline.id %}"  method="post" autocomplete="off">
+							<div class="modal-body ">
+							{% csrf_token %}
+							<label for="date_entree">Date d'entrée</label>
+							<input type="date"  class="form-control form-control-ms mb-3"  value="{{ hotline.date_entree }}" name="date_entree">
+							<label for="ticket">Ticket</label>
+							<input type="text"  class="form-control form-control-ms mb-3"  value="{{ hotline.ticket}}" name="ticket">
+							<label for="designation">Désignation</label>
+							<input type="text"  class="form-control form-control-ms mb-3"  value="{{ hotline.designation}}" name="designation">
+							<label for="serialNumber">N° de série</label>
+							<input type="text"  class="form-control form-control-ms mb-3"  value="{{ hotline.serialNumber}}" name="serialNumber">
+							<label for="anomaly">Anomalie constatée</label>
+							<input type="text"  class="form-control form-control-ms mb-3"  value="{{ hotline.anomaly}}" name="anomaly">
+							<label for="source">Provenance</label>
+							<select id="source" class="form-select" name="source">
+							<option value="{{ hotline.source.id }}">{{ hotline.source.name }}</option>
+							{% for source in sources %}
+								<option value="{{ source.id }}">{{ source.name }}</option>
+							{% endfor %}
+							</select>
+							<label for="locality">Localité</label>
+							<select id="locality" class="form-select" name="locality">
+							<option value="{{ hotline.locality.id }}">{{ hotline.locality.name }}</option>
+							{% for locality in localities %}
+								<option value="{{ locality.id }}">{{ locality.name }}</option>
+							{% endfor %}
+							</select>
+							<input type="hidden" name="updated_by" value="{{ user.first_name }} {{ user.last_name }}">
+							<input type="hidden" name="isMaintenance" value="non">
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+								<input type="submit" value="Valider" class="btn btn-success">
+								<input type="hidden" name="id" value="{{ hotline.id }}">
+							</div>
+						</form>
               </td>
               <td>
                 {% if hotline.isMaintenance == 'non' %}
