@@ -97,12 +97,16 @@
           <td>{{ hotline.user.first_name }} {{ hotline.user.last_name }}</td>
           <td>{{ hotline.updated_by }}</td>
           <td>
-			{% if hotline.isMaintenance == 'oui' or hotline.isMaintenance == 'end' %}
-				<button class="btn btn-primary position-center" disabled>
+			{% if hotline.isMaintenance == 'oui' %}
+				<button class="btn btn-warning position-center" placeholder disabled>
 					<i class="fa-solid fa-lock"></i>
 				</button>
+            {% elif hotline.isMaintenance == 'end' %}
+            <button class="btn btn-success position-center" placeholder disabled>
+                <i class="fa-solid fa-lock"></i>
+            </button>
 			{% elif hotline.isMaintenance == 'non' %}
-			<button type="button" class="btn btn-primary position-center  translate-light" data-bs-toggle="modal" 
+			<button type="button" class="btn btn-primary position-center translate-light" data-bs-toggle="modal" 
             data-bs-target="#modal_update{{ hotline.id }}"><i class="fa-solid fa-pen"></i></button>
 			{% endif %}
             <!-- Modal -->
