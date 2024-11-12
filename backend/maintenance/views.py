@@ -4,6 +4,7 @@ from . import forms
 from . import models
 from maintenance.models import Maintenance
 from maintenance.forms import MaintenanceForm 
+
 @login_required
 def maintenance(request):
 
@@ -15,7 +16,6 @@ def maintenance(request):
     
     if request.method == 'POST':
         form = forms.MaintenanceForm(request.POST)
-        print(form)
         if form.is_valid():
             maintenance_form = form.save(commit=False)
             maintenance_form.user = request.user
@@ -26,6 +26,9 @@ def maintenance(request):
             maintenance_form.status = status
             maintenance_form.hotline = hotline
             maintenance_form.save()
+
+            hotline.isMaintenance = 'end'
+            hotline.save()
             save_data = 'ok'
             
     else:

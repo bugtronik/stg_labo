@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from . import forms
 from . import models
 from hotline.models import Hotline
+from maintenance.models import Maintenance
 from hotline.forms import HotlineForm
 
 @login_required
@@ -11,6 +12,7 @@ def hotline(request):
     hotlines = models.Hotline.objects.all()
     sources = models.Source.objects.all()
     localities = models.Locality.objects.all()
+    maintenances = Maintenance.objects.all()
     save_data = ''
 
     
@@ -37,6 +39,7 @@ def hotline(request):
                     'hotlines': hotlines,
                     'sources': sources,
                     'localities': localities,
+                    'maintenances': maintenances,
                     'save_data': save_data})
 
 def hotline_update(request, id):
@@ -44,12 +47,12 @@ def hotline_update(request, id):
     hotlines = Hotline.objects.all()
     sources = models.Source.objects.all()
     localities = models.Locality.objects.all()
+    maintenances = Maintenance.objects.all()
     form = forms.HotlineForm()
     update_data = ''
 
     if request.method == 'POST':
         form_update = forms.HotlineForm(request.POST, instance=hotline)
-        print(form_update)
         if form_update.is_valid():
             hotline_form = form.save(commit=False)
             hotline_form.user = request.user
@@ -71,5 +74,6 @@ def hotline_update(request, id):
                   'hotlines': hotlines,
                   'sources': sources,
                   'localities': localities,
+                  'maintenances': maintenances,
                   'update_data': update_data})
 

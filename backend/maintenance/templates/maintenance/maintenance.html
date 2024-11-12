@@ -23,10 +23,10 @@
 				<div class="col-md-12">
 					<label for="hotline">Equipement</label>
                         <select id="hotline" class="form-select" name="hotline">
-                        <option value=""></option>
+							<option value=""></option>
                         {% for hotline in hotlines %}
 							{% if hotline.isMaintenance == 'oui' %}
-                        	<option value="{{ hotline.id }}">{{ hotline.designation }} - {{ hotline.serialNumber }}</option>
+                        		<option value="{{ hotline.id }}">{{ hotline.designation }} - {{ hotline.serialNumber }}</option>
 							{% endif %}
                         {% endfor %}
                     </select>
@@ -76,6 +76,8 @@
         <th scope="col">Status</th>
         <th scope="col">Observation</th>
         <th scope="col">Date de sortie</th>
+		<th scope="col">Créer par</th>
+		<th scope="col">Modifier par</th>
         <th scope="col">Action</th>
       </tr>
   </thead>
@@ -88,6 +90,8 @@
         <td>{{ maintenance.status.libelle }}</td>
         <td>{{ maintenance.observation }}</td>
         <td>{{ maintenance.date_sortie }}</td>
+		<td>{{ maintenance.user.first_name }} {{ maintenance.user.last_name }}</td>
+		<td>{{ maintenance.updated_by }}</td>
         <td>
             <button type="button" class="btn btn-primary position-center  translate-light" data-bs-toggle="modal" 
             data-bs-target="#modal_update{{ maintenance.id }}"><i class="fa-solid fa-pen"></i></button>
@@ -113,8 +117,6 @@
                         <input type="date"  class="form-control form-control-ms mb-3"  value="{{ maintenance.date_entree}}" name="date_entree">
                         <label for="diagnostic">Diagnostic</label>
                         <input type="text"  class="form-control form-control-ms mb-3"  value="{{ maintenance.diagnostic}}" name="diagnostic">
-                        <label for="status">Travaux exécutés</label>
-                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ maintenance.status}}" name="status">
                         <label for="observation">Observation</label>
                         <input type="text"  class="form-control form-control-ms mb-3"  value="{{ maintenance.observation}}" name="observation">
                         <label for="status">Travaux effectués</label>
@@ -131,6 +133,7 @@
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                             <input type="submit" value="Valider" class="btn btn-success">
                             <input type="hidden" name="id" value="{{ maintenance.id }}">
+							<input type="hidden" name="updated_by" value="{{ user.first_name }} {{ user.last_name }}">
                         </div>
                     </form>
               </td>

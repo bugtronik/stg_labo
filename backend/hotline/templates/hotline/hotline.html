@@ -81,7 +81,7 @@
           <th scope="col">Créer par</th>
           <th scope="col">Modifier par</th>
           <th scope="col">Action</th>
-          <th scope="col">Envoyer au labo</th>
+          <th scope="col">Maintenance</th>
       </tr>
   </thead>
   <tbody class="table-group-divider">
@@ -180,8 +180,12 @@
                 </div>
 				{% elif hotline.isMaintenance == 'oui' %}
 					<div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-						<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 100%">Maintenance en cours</div>
-				  	</div>
+						<div class="progress-bar progress-bar-striped progress-bar-animated bg-warning text-dark" style="width: 100%;">Maintenance en cours</div>
+					</div>
+				{% elif hotline.isMaintenance == 'end' %}
+					<div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						<div class="progress-bar bg-success">Maintenance terminée</div>
+					</div>
 				{% endif %}
               </td>
             </tr>
