@@ -1,15 +1,16 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from . import forms
 from . import models
 from maintenance.models import Maintenance
 from maintenance.forms import MaintenanceForm 
+
 @login_required
 def maintenance(request):
 
     maintenances = models.Maintenance.objects.all()
-    sources = models.Source.objects.all()
-    localities = models.Locality.objects.all()
+    statuts = models.Status.objects.all()
+    hotlines = models.Hotline.objects.all()
     save_data = ''
 
     
@@ -19,12 +20,15 @@ def maintenance(request):
             maintenance_form = form.save(commit=False)
             maintenance_form.user = request.user
             # on récupère la source, la localité avec leur id
-            source = models.Source.objects.get(id=request.POST.get('source'))
-            locality = models.Locality.objects.get(id=request.POST.get('locality'))
+            status = models.Status.objects.get(id=request.POST.get('status'))
+            hotline = models.Hotline.objects.get(id=request.POST.get('hotline'))
 
-            maintenance_form.source = source
-            maintenance_form.locality = locality
+            maintenance_form.status = status
+            maintenance_form.hotline = hotline
             maintenance_form.save()
+
+            hotline.isMaintenance = 'end'
+            hotline.save()
             save_data = 'ok'
             
     else:
@@ -34,16 +38,16 @@ def maintenance(request):
                   'maintenance/maintenance.html',
                    {'form': form,
                     'maintenances': maintenances,
-                    'sources': sources,
-                    'localities': localities,
+                    'statuts': statuts,
+                    'hotlines': hotlines,
                     'save_data': save_data})
 
 
 def maintenance_update(request, id):
     maintenance = Maintenance.objects.get(id=id)
     maintenances = Maintenance.objects.all()
-    sources = models.Source.objects.all()
-    localities = models.Locality.objects.all()
+    statuts = models.Status.objects.all()
+    hotlines = models.Hotline.objects.all()
     form = forms.MaintenanceForm()
     update_data = ''
 
@@ -53,10 +57,10 @@ def maintenance_update(request, id):
             maintenance_form = form.save(commit=False)
             maintenance_form.user = request.user
             
-            source = models.Source.objects.get(id=request.POST.get('source'))
-            locality = models.Locality.objects.get(id=request.POST.get('locality'))
-            maintenance_form.source = source
-            maintenance_form.locality = locality
+            status = models.Status.objects.get(id=request.POST.get('status'))
+            hotline = models.Hotline.objects.get(id=request.POST.get('hotline'))
+            maintenance_form.status = status
+            maintenance_form.hotline = hotline
             form_update.save()
             update_data = 'ok'
             
@@ -68,7 +72,7 @@ def maintenance_update(request, id):
                   {'form_update': form_update,
                    'form': form,
                   'maintenances': maintenances,
-                  'sources': sources,
-                  'localities': localities,
+                  'statuts': statuts,
+                  'hotlines': hotlines,
                   'update_data': update_data})
 

@@ -5,21 +5,9 @@ from . import models
 class MaintenanceForm(forms.ModelForm):
     class Meta:
         model = models.Maintenance
-        fields = ['ticket' ,'designation','serialNumber', 'anomaly', 'status', 'observation', 'date_entree', 'date_sortie', 'source', 'locality',]
+        fields = ['diagnostic', 'observation', 'date_entree', 'date_sortie', 'updated_by',]
         widgets = {
-            'ticket': TextInput(attrs={
-                'class': "form-control col-4",
-            }),
             'designation': TextInput(attrs={
-                'class': "form-control col-4",
-            }),
-            'serialNumber': TextInput(attrs={
-                'class': "form-control col-4",
-            }),
-            'anomaly': TextInput(attrs={
-                'class': "form-control col-4",
-            }),
-            'status': TextInput(attrs={
                 'class': "form-control col-4",
             }),
             'observation': TextInput(attrs={

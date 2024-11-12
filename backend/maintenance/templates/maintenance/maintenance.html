@@ -18,45 +18,34 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form class="row g-3" action="{% url 'maintenance' %}" method="post" autocomplete="off">
+			{% csrf_token %}
             <div class="modal-body">
-            <div class="col-md-12">
-                <label for="ticket">Ticket</label>
-                <input type="text"  class="form-control form-control-ms mb-3" name="ticket">
-                <label for="designation">Désignation Equipement</label>
-                <input type="text"  class="form-control form-control-ms mb-3" name="designation">
-                <label for="serialNumber">N° de série</label>
-                <input type="text"  class="form-control form-control-ms mb-3" name="serialNumber">
-                <label for="anomaly">Anomalie</label>
-                <input type="text"  class="form-control form-control-ms mb-3" name="anomaly">
-                <label for="status">Travaux exécutés</label>
-                <input type="text"  class="form-control form-control-ms mb-3" name="status">
-                <label for="observation">Observation</label>
-                <input type="text"  class="form-control form-control-ms mb-3" name="observation">
-                <label for="date_entree">Date d'entrée</label>
-                <input type="date"  class="form-control form-control-ms mb-3" name="date_entree">
-                <label for="date_sortie">Date de sortie</label>
-                <input type="date"  class="form-control form-control-ms mb-3" name="date_sortie">
-                <label for="source" class="form-label">Provenance</label>
-                <select id="source" class="form-select" name="source">
-                <option value=""></option>
-              {% for source in sources %}
-                <option  value="{{ source.id }}">{{ source.name }}</option>
-              {% endfor %}
-            </select>
-            </div>
-            <div class="col-md-6">
-              <label for="locality" class="form-label">Localité</label>
-              <select id="locality" class="form-select" name="locality">
-                <option value=""></option>
-              {% for locality in localities %}
-                <option  value="{{ locality.id }}">{{ locality.name }}</option>
-              {% endfor %}
-            </select>
-            </div>
-            <div  class="row g-3">
-                {% csrf_token %}
-                
-            </div>
+				<div class="col-md-12">
+					<label for="hotline">Equipement</label>
+                        <select id="hotline" class="form-select" name="hotline">
+							<option value=""></option>
+                        {% for hotline in hotlines %}
+							{% if hotline.isMaintenance == 'oui' %}
+                        		<option value="{{ hotline.id }}">{{ hotline.designation }} - {{ hotline.serialNumber }}</option>
+							{% endif %}
+                        {% endfor %}
+                    </select>
+					<label for="date_entree">Date d'entrée</label>
+					<input type="date"  class="form-control form-control-ms mb-3" name="date_entree">
+					<label for="diagnostic">Diagnostic</label>
+					<input type="text"  class="form-control form-control-ms mb-3" name="diagnostic">
+					<label for="status">Travaux effectués</label>
+                    <select id="status" class="form-select" name="status">
+                        <option value=""></option>
+                        {% for statut in statuts %}
+                        	<option value="{{ statut.id }}">{{ statut.libelle }}</option>
+                        {% endfor %}
+                    </select>
+					<label for="observation">Observation</label>
+					<input type="text"  class="form-control form-control-ms mb-3" name="observation">
+					<label for="date_sortie">Date de sortie</label>
+					<input type="date"  class="form-control form-control-ms mb-3" name="date_sortie">
+				</div>
             </div>
             <div class="col-12 modal-footer">
               <button type="submit" class="btn btn-primary">Valider</button>
@@ -81,33 +70,29 @@
   <table class="table" id="myTable">
     <thead class="table-light">
       <tr>
-          <th scope="col">date d'entrée</th>
-          <th scope="col">N° Ticket</th>
-          <th scope="col">Désignation Equipement</th>
-          <th scope="col">N° de Série</th>
-          <th scope="col">Provenance</th>
-          <th scope="col">Localité</th>
-          <th scope="col">Anomalie constaté</th>
-          <th scope="col">Status</th>
-          <th scope="col">Observation</th>
-          <th scope="col">Date de sortie</th>
-          <th scope="col">Action</th>
+		<th scope="col">Equipement</th>
+        <th scope="col">Date d'entrée</th>
+		<th scope="col">Diagnostic</th>
+        <th scope="col">Status</th>
+        <th scope="col">Observation</th>
+        <th scope="col">Date de sortie</th>
+		<th scope="col">Créer par</th>
+		<th scope="col">Modifier par</th>
+        <th scope="col">Action</th>
       </tr>
   </thead>
   <tbody class="table-group-divider">
       {% for maintenance in maintenances %}
       <tr>
-          <td>{{ maintenance.date_entree|date:'d-m-Y' }}</td>
-          <td>{{ maintenance.ticket }}</td>
-          <td>{{ maintenance.designation }}</td>
-          <td>{{ maintenance.serialNumber }}</td>
-          <td>{{ maintenance.source.name }}</td>
-          <td>{{ maintenance.locality.name }}</td>
-          <td>{{ maintenance.anomaly }}</td>
-          <td>{{ maintenance.status }}</td>
-          <td>{{ maintenance.observation }}</td>
-          <td>{{ maintenance.date_sortie }}</td>
-          <td>
+		<td>{{ maintenance.hotline.designation }} - {{ maintenance.hotline.serialNumber }}</td>
+        <td>{{ maintenance.date_entree|date:'d-m-Y' }}</td>
+        <td>{{ maintenance.diagnostic }}</td>
+        <td>{{ maintenance.status.libelle }}</td>
+        <td>{{ maintenance.observation }}</td>
+        <td>{{ maintenance.date_sortie }}</td>
+		<td>{{ maintenance.user.first_name }} {{ maintenance.user.last_name }}</td>
+		<td>{{ maintenance.updated_by }}</td>
+        <td>
             <button type="button" class="btn btn-primary position-center  translate-light" data-bs-toggle="modal" 
             data-bs-target="#modal_update{{ maintenance.id }}"><i class="fa-solid fa-pen"></i></button>
             <!-- Modal -->
@@ -121,41 +106,34 @@
                     <form action="{% url 'maintenance-update' maintenance.id %}"  method="post" autocomplete="off">
                         <div class="modal-body ">
                         {% csrf_token %}
-                        <label for="ticket">Ticket</label>
-                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ maintenance.ticket}}" name="ticket">
-                        <label for="designation">Désignation</label>
-                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ maintenance.designation}}" name="designation">
-                        <label for="serialNumber">N° de série</label>
-                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ maintenance.serialNumber}}" name="serialNumber">
-                        <label for="anomaly">Anomalie constatée</label>
-                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ maintenance.anomaly}}" name="anomaly">
-                        <label for="status">Travaux exécutés</label>
-                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ maintenance.status}}" name="status">
-                        <label for="observation">Observation</label>
-                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ maintenance.observation}}" name="observation">
-                        <label for="source">Provenance</label>
-                        <select id="source" class="form-select" name="source">
-                        <option value="{{ maintenance.source.id }}">{{ maintenance.source.name }}</option>
-                          {% for source in sources %}
-                            <option value="{{ source.id }}">{{ source.name }}</option>
+						<label for="hotline">Equipement</label>
+                        <select id="hotline" class="form-select" name="hotline">
+                        <option value="{{ maintenance.status.id }}">{{ maintenance.hotline.designation }} - {{ maintenance.hotline.serialNumber }}</option>
+                          {% for status in statuts %}
+                            <option value="{{ status.id }}">{{ status.libelle }}</option>
                           {% endfor %}
                         </select>
-                        <label for="locality">Localité</label>
-                        <select id="locality" class="form-select" name="locality">
-                        <option value="{{ maintenance.locality.id }}">{{ maintenance.locality.name }}</option>
-                          {% for locality in localities %}
-                            <option value="{{ locality.id }}">{{ locality.name }}</option>
+						<label for="date_entree">Date d'entrée</label>
+                        <input type="date"  class="form-control form-control-ms mb-3"  value="{{ maintenance.date_entree}}" name="date_entree">
+                        <label for="diagnostic">Diagnostic</label>
+                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ maintenance.diagnostic}}" name="diagnostic">
+                        <label for="observation">Observation</label>
+                        <input type="text"  class="form-control form-control-ms mb-3"  value="{{ maintenance.observation}}" name="observation">
+                        <label for="status">Travaux effectués</label>
+                        <select id="status" class="form-select" name="status">
+                        <option value="{{ maintenance.status.id }}">{{ maintenance.status.libelle }}</option>
+                          {% for status in statuts %}
+                            <option value="{{ status.id }}">{{ status.libelle }}</option>
                           {% endfor %}
                         </select>
                         </div>
-                        <label for="date_entree">Date d'entrée</label>
-                        <input type="date"  class="form-control form-control-ms mb-3"  value="{{ maintenance.date_entree}}" name="date_entree">
                         <label for="date_sortie">Date de sortie</label>
                         <input type="date"  class="form-control form-control-ms mb-3"  value="{{ maintenance.date_sortie}}" name="date_sortie">
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                             <input type="submit" value="Valider" class="btn btn-success">
                             <input type="hidden" name="id" value="{{ maintenance.id }}">
+							<input type="hidden" name="updated_by" value="{{ user.first_name }} {{ user.last_name }}">
                         </div>
                     </form>
               </td>
